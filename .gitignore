@@ -5,3 +5,6 @@ data/
 analysis/figures/
 analysis/__pycache__/
 .DS_Store
+
+
+scripts/
