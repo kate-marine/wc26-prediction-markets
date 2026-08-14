@@ -8,8 +8,8 @@ FIG_DIR = ROOT / "analysis" / "figures"
 
 
 def load_kalshi_final():
-    markets = pd.read_parquet(ROOT / "data/raw/kalshi/kxwcgame_markets.parquet")
-    candles = pd.read_parquet(ROOT / "data/raw/kalshi/candlesticks/kxwcgame_minute.parquet")
+    markets = pd.read_parquet(ROOT / "data/kalshi/kxwcgame_markets.parquet")
+    candles = pd.read_parquet(ROOT / "data/kalshi/candlesticks/kxwcgame_minute.parquet")
 
     final_ticker = markets.loc[markets["close_time"].idxmax(), "event_ticker"]
     final_markets = markets[markets["event_ticker"] == final_ticker]
@@ -24,7 +24,7 @@ def load_kalshi_final():
 
 
 def load_sofascore_match(home_team: str, away_team: str):
-    schedule = pd.read_parquet(ROOT / "data/raw/sofascore/schedule.parquet")
+    schedule = pd.read_parquet(ROOT / "data/sofascore/schedule.parquet")
     teams = {home_team, away_team}
     match = schedule[schedule.apply(lambda r: {r["home_team"], r["away_team"]} == teams, axis=1)]
     if match.empty:
@@ -32,10 +32,10 @@ def load_sofascore_match(home_team: str, away_team: str):
     match = match.iloc[0]
     event_id = match["event_id"]
 
-    momentum = pd.read_parquet(ROOT / "data/raw/sofascore/momentum.parquet")
+    momentum = pd.read_parquet(ROOT / "data/sofascore/momentum.parquet")
     momentum = momentum[momentum["event_id"] == event_id]
 
-    incidents = pd.read_parquet(ROOT / "data/raw/sofascore/incidents.parquet")
+    incidents = pd.read_parquet(ROOT / "data/sofascore/incidents.parquet")
     goals = incidents[(incidents["event_id"] == event_id) & (incidents["incident_type"] == "goal")]
     return momentum, goals, match
 
@@ -81,7 +81,7 @@ def main() -> None:
         )
 
     fig.tight_layout()
-    out_path = FIG_DIR / "final_case_study.png"
+    out_path = FIG_DIR / "final_plot.png"
     fig.savefig(out_path, dpi=150)
     print(f"Saved {out_path}")
 
