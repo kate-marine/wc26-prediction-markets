@@ -49,28 +49,14 @@ python3 -m venv .venv
   third-party API access, so this is used read-only at modest, personal
   -research volume — see `code/sofascore_client.py` for details.
 
-None of the three sources share a match ID — `data/README.md` has the
-join recipe (team names + kickoff date).
 
 ### Analysis
 
-- **`02_analyze_dominance.ipynb`** — tournament-wide scatter of |xG
-  margin| (SofaScore) against Kalshi price volatility, across all 104
-  matches.
-- **`02_analyze_final_match.ipynb`** — single-match deep dive on the
-  final: Kalshi's implied win/lose/tie probabilities against SofaScore's
-  per-minute momentum, with goals marked.
+- **`dominance_analysis.ipynb`** — tournament-wide scatter plot of |xG
+  margin| against Kalshi price volatility.
 
-Both write their figure to `output/figures/`.
+- **`final_match_analysis.ipynb`** — plots Kalshi win/lose/tie probabilities against SofaScore's per-minute momentum for the final.
 
-## Data
 
-See [`data/README.md`](data/README.md) for the full data dictionary and
-the cross-source join recipe. Data lives in this repo under `data/` —
-it's small (a few MB total), so it's committed directly rather than
-pushed to a separate cloud folder.
 
-## Still needed
 
-- Social/attention data (search trends, social mentions) — not yet
-  sourced.
