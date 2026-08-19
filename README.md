@@ -46,6 +46,8 @@ Note: used Claude Code to help generate these notebooks as trying to scrape the 
 
 - **`final_match_analysis.ipynb`** — plots Kalshi win/lose/tie probabilities against SofaScore's per-minute momentum for the final.
 
+- **`regression_analysis.ipynb`** — regresses price movement (split into in-match repricing vs. the jump at settlement) on the actual goal margin vs. xG/possession/shots margins, across all 104 matches, to see whether the market moves more with results or with underlying performance.
+
 
 
 
