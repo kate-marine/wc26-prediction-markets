@@ -48,6 +48,10 @@ Note: used Claude Code to help generate these notebooks as trying to scrape the 
 
 - **`regression_analysis.ipynb`** — regresses price movement (split into in-match repricing vs. the jump at settlement) on the actual goal margin vs. xG/possession/shots margins, across all 104 matches, to see whether the market moves more with results or with underlying performance.
 
+- **`overreaction_analysis.ipynb`** — event study on goals: does the market overreact and partially correct, or keep drifting the same way? First-half goals only (see the notebook for why — reconstructing real match time for the 2nd half/extra time needs break durations the data doesn't have). Preliminary result: no overreaction — if anything a mild, statistically significant tendency to keep drifting the same direction (p < 0.001 vs. a 50/50 null), though the effect is small in magnitude.
+
+- **`calibration_analysis.ipynb`** — a different angle on the same "are reactions justified" question: is a Kalshi price of X% actually right X% of the time (Brier score + reliability diagram), tracked at fixed times before each market's settlement instead of around discrete events. Sidesteps the match-time reconstruction problem entirely (uses Kalshi's own `close_time`, no cross-source join), so it covers all 312 markets across the full pre-match-to-close window, not just first-half goals. Result so far: Brier score improves smoothly as settlement approaches and beats the base-rate benchmark throughout; the reliability diagram tracks the diagonal reasonably well with no obvious systematic bias — consistent with the overreaction notebook's finding, though it's answering a related, not identical, question (average calibration vs. specific-event reversion).
+
 
 
 
