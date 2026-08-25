@@ -148,7 +148,7 @@ export const findings: Finding[] = [
    // notebook: "heterogeneity_analysis.ipynb",
     title: "Efficiency across matches",
     summary:
-      "The strongest finding in the project. Re-cutting the calibration methodology across three conditions instead of one pooled number: no effect from tournament progression, but match-level attention (total volume) predicts significantly worse calibration, while checkpoint-level open interest independently predicts better calibration. Stress-tested with a tournament-stage control — the attention effect doesn't just survive, it strengthens.",
+      "Matches attracting the greatest trading volume (and with the most money flowing through them) are priced measurably less accurately, and this effect is independent of tournament stage, survives disaggregation from open interest",
     stats: [
       { label: "low-volume Brier", value: "0.103" },
       { label: "high-volume Brier", value: "0.151" },
