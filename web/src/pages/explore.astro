@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Dashboard from "../components/explorer/Dashboard";
+---
+
+<BaseLayout title="Explore" wide>
+  <h1>Explore the data</h1>
+  <p class="prose">
+    Browse by match to see Kalshi's live implied win/lose/tie probabilities plotted against SofaScore's per-minute momentum, with goals marked &mdash; the same view used as a case study in <a href="/#final-match">Findings</a>, generalized to the whole tournament. Or browse by team to see a team's tournament-winner odds across the whole competition, with every match they played marked.
+  </p>
+  <Dashboard client:load />
+</BaseLayout>

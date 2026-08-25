@@ -1,0 +1,20 @@
+---
+import type { Stat } from "../data/findings";
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<dl class="stat-block">
+  {
+    stats.map((s) => (
+      <div class="stat-block__item">
+        <dt>{s.label}</dt>
+        <dd>{s.value}</dd>
+      </div>
+    ))
+  }
+</dl>

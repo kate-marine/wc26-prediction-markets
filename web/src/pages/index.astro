@@ -1,0 +1,134 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FigureCard from "../components/FigureCard.astro";
+import StatBlock from "../components/StatBlock.astro";
+import { findings } from "../data/findings";
+
+const headlineStats = [
+  { label: "matches", value: "104" },
+  { label: "markets", value: "312" },
+  { label: "P", value: "2.6×10⁻⁷" },
+];
+
+const outline = [
+  { href: "#question", label: "Questions" },
+  { href: "#data", label: "Data" },
+  { href: "#method", label: "Methods" },
+  { href: "#result", label: "Results" },
+  { href: "#takeaway", label: "Takeaways" },
+];
+---
+
+<BaseLayout title="Home">
+  <section>
+    <h1>World Cup 2026 Prediction Markets</h1>
+    <p>
+     An analysis of Kalshi's 2026 World Cup prediction markets.
+    </p>
+    <nav class="page-outline" aria-label="Page sections">
+      {
+        outline.map((o, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true"> &middot; </span>}
+            <a href={o.href}>{o.label}</a>
+          </>
+        ))
+      }
+    </nav>
+  </section>
+
+  <br>
+
+  <section id="question">
+    <h2>Questions</h2>
+    <ol>
+      <li>Do betting markets react more to the final result of a match or to how well a team actually played?</li>
+      <li>Does the market react to new information rationally, or does it show behavioral biases such as <strong>overreacting</strong> (a move that partially reverses) or <strong>underreacting</strong> (a move that keeps drifting, as if catching up)?</li>
+      <li>Is efficiency uniform across matches, or does it vary with how much <strong>public attention</strong> a match draws?</li>
+    </ol>
+  </section>
+
+  <section id="data">
+    <h2>Data</h2>
+    <p>
+      Includes all 104 matches of the 2026 World Cup, with three sources joined by team identity and kickoff date.
+    </p>
+    <table>
+      <thead>
+        <tr><th>Source</th><th>Coverage</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Kalshi &mdash; KXWCGAME</td>
+          <td>3-way (home/away/tie) regulation-time moneyline contract per match; minute-resolution price, volume, and open-interest candles.</td>
+        </tr>
+        <tr>
+          <td>Kalshi &mdash; KXMENWORLDCUP</td>
+          <td>One tournament-winner futures contract per team; hourly candles spanning the full tournament.</td>
+        </tr>
+        <tr>
+          <td>FBref (Opta-sourced)</td>
+          <td>Official match and player statistics: shooting, cards, fouls, lineups, event timelines.</td>
+        </tr>
+        <tr>
+          <td>SofaScore</td>
+          <td>Expected goals (xG) and ~45 other team statistics split by half; minute-stamped goals/cards/subs; per-minute momentum index.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="method">
+    <h2>Methods</h2>
+    <p>There were four main stages of my analysis, each meant to examine a different piece of the questions above:</p>
+    <ul>
+      <li><strong>Regression</strong>: I regressed price movement on goal margin and xG margin to see which one it tracks more closely.</li>
+      <li><strong>Event studies</strong>: I split price reactions into an immediate <em>jump</em> and a subsequent <em>drift</em>; a drift that opposes the jump is a sign of overreaction, and a drift that continues with the jump indicates underreaction.</li>
+      <li><strong>Calibration</strong>: To evaluate whether a price of X% actually happens X% of the time, I sampled prices at eight fixed checkpoints preceding each contract’s own settlement (3 h to 5 min) and paired it with the eventual binary outcome. I then assessed calibration with two standard measures: Brier score (mean squared error between price and outcome, where lower values indicate better calibration) and a reliability diagram (binned price against realized frequency, with 95% Wilson confidence intervals).</li>
+      <li><strong>Heterogeneity</strong>: Because the calibration design produced only one pooled statistic, I also modeled each observation’s squared error directly. I regressed squared error on standardized log trading volume and open interest, with checkpoint fixed effects to account for changes as settlement approaches.</li>
+    </ul>
+    <!-- 
+    <p>
+      Note: team names are not internally consistent even within Kalshi's own series (e.g. Turkiye vs. Turkey), and SofaScore differs from both on a further eight teams (e.g. Cape Verde vs. Cabo Verde); I joined the datasets with a manual crosswalk and validated against a zero-unmatched-observations check. 
+    </p>
+    -->
+    
+  </section>
+
+  <section id="result">
+    <h2>Results</h2>
+    <p>
+      Goal margin dominates price movement; xG margin barely registers once both are in the same model. Across four independent tests, the market shows no reliable overreaction or underreaction. But pooled efficiency hides real structure: the most heavily traded matches are priced measurably <em>less</em> accurately than quiet ones &mdash; a pattern that survives, and even strengthens, once tournament stage is controlled for.
+    </p>
+    <StatBlock stats={headlineStats} />
+    <p>on the attention-vs-calibration effect &mdash; the full set of tests, in the order the argument builds:</p>
+
+    <div id="findings-list">
+      {
+        findings.map((f) => (
+          <section id={f.slug}>
+            <h3>{f.title}</h3>
+            <p>{f.summary}</p>
+            <StatBlock stats={f.stats} />
+            {f.figures.map((fig) => (
+              <FigureCard src={fig.src} alt={fig.alt} caption={fig.caption} />
+            ))}
+          </section>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="takeaway">
+    <h2>Takeaways</h2>
+    <div class="closing-box">
+      <p>
+        This market gets the fundamentals right &mdash; it tracks results, and it doesn't show a directional behavioral bias &mdash; but its accuracy isn't uniform. Attention and pricing accuracy pull in opposite directions, which matters most exactly where a market is trusted most: the matches everyone is watching.
+      </p>
+      <p>
+        <a href="/explore">Explore the data &rarr;</a><br />
+        <a href="https://github.com/kate-marine/wc26-prediction-markets" target="_blank" rel="noreferrer">GitHub repository &rarr;</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
