@@ -88,7 +88,7 @@ export const findings: Finding[] = [
    // notebook: "05_analysis_calibration.ipynb",
     title: "Is the market calibrated?",
     summary:
-      "A different angle on the same question: is a Kalshi price of X% actually right X% of the time? Brier score improves smoothly as settlement approaches and beats the base-rate benchmark throughout; the reliability diagram tracks the diagonal reasonably well with no obvious systematic bias.",
+      "A different angle on the same question of whether a Kalshi price of X% is actually right X% of the time. I find that Brier scores improve as settlement approaches and is better than the base-rate benchmark consistently. The reliability diagram also shows no obvious systematic bias.",
     stats: [
       { label: "Brier @ 3h", value: "0.166" },
       { label: "Brier @ 5min", value: "0.026" },
