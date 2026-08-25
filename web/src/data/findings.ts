@@ -106,7 +106,7 @@ export const findings: Finding[] = [
    // notebook: "06_analysis_attention.ipynb",
     title: "Does public attention explain market behavior?",
     summary:
-      "Using Kalshi's own volume and open interest as a revealed-preference attention proxy. Trading volume is concentrated in the group stage, not the final — the final ranks only #59 of 104 matches by volume. Around goals, bigger volume spikes predict bigger immediate price jumps, but not whether that jump later reverts.",
+      "Using Kalshi's own volume and open interest as a revealed-preference attention proxy. Trading volume is concentrated in the group stage, not the final. In fact, the final ranks only #59 of 104 matches by volume. Around goals, bigger volume spikes predict bigger immediate price jumps, but not whether that jump later reverts.",
     stats: [
       { label: "final's rank by volume", value: "#59 / 104" },
       { label: "spike r on jump size", value: "+0.29 (P = .04)" },
@@ -127,9 +127,9 @@ export const findings: Finding[] = [
   {
     slug: "underreaction",
   //  notebook: "07_analysis_underreaction.ipynb",
-    title: "Testing the mirror-image hypothesis",
+    title: "Testing the underreaction",
     summary:
-      "Instead of overreacting to goals, does the market underreact to performance quality the scoreline didn't capture? Uses performance_gap (xG margin minus goal margin) to predict subsequent title-odds drift, across all 208 team-match observations. No evidence of underreaction either — where there's any hint at all, it points the opposite direction from the prediction.",
+      "Instead of overreacting to goals, does the market underreact to performance quality the scoreline didn't capture? Uses performance_gap (xG margin minus goal margin) to predict subsequent title-odds drift, across all 208 team-match observations. I find no evidence of underreaction either. Where there's any hint at all, it points the opposite direction from the prediction.",
     stats: [
       { label: "r, all goals", value: "−0.07 (P = .36)" },
       { label: "r, reactive subset", value: "−0.25 (P = .09)" },
@@ -146,7 +146,7 @@ export const findings: Finding[] = [
   {
     slug: "heterogeneity",
    // notebook: "heterogeneity_analysis.ipynb",
-    title: "Where efficiency breaks down",
+    title: "Efficiency across matches",
     summary:
       "The strongest finding in the project. Re-cutting the calibration methodology across three conditions instead of one pooled number: no effect from tournament progression, but match-level attention (total volume) predicts significantly worse calibration, while checkpoint-level open interest independently predicts better calibration. Stress-tested with a tournament-stage control — the attention effect doesn't just survive, it strengthens.",
     stats: [
