@@ -69,7 +69,7 @@ export const findings: Finding[] = [
   //  notebook: "04_analysis_overreaction.ipynb",
     title: "Does the market overreact to goals?",
     summary:
-      "An event study on goals: does the market overreact and partially correct, or keep drifting the same way? Restricted to first-half goals (see About for why). No overreaction — if anything a mild tendency to keep drifting the same direction.",
+      "I conducted four independent tests at three different time scales, and all found no evidence of overreaction. Among first-half goals with a measurable price reaction, only 27.6\% showed subsequent drift opposite in sign to the initial jump, which is significantly less than the 50\% expected under a null of no systematic reversion.",
     stats: [
       { label: "observed reversion", value: "27.6% (P < .001)" },
       { label: "expected (null)", value: "50%" },
