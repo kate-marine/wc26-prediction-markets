@@ -13,24 +13,24 @@ export interface Finding {
 }
 
 export const findings: Finding[] = [
-  {
-    slug: "dominance",
-   // notebook: "01_analysis_dominance.ipynb",
-    title: "Performance dominance vs. price volatility",
-    summary:
-      "This was a preliminary analysis into whether a lopsided performance (measured by |xG margin|) corresponds to a calmer, more confidently-priced market? Across all 104 matches, bigger blowouts tend toward calmer markets, while closer matches show far more varied volatility.",
-    stats: [
-      { label: "Pearson r", value: "−0.38" },
-      { label: "n", value: "104" },
-    ],
-    figures: [
-      {
-        src: "/figures/dominance_plot.png",
-        alt: "Scatter plot of xG margin against Kalshi price range",
-        caption: "|xG margin| vs. the price range of the market pricing the actual outcome, across all 104 matches.",
-      },
-    ],
-  },
+  // {
+  //   slug: "dominance",
+  //  // notebook: "01_analysis_dominance.ipynb",
+  //   title: "Performance dominance vs. price volatility",
+  //   summary:
+  //     "This was a preliminary analysis into whether a lopsided performance (measured by |xG margin|) corresponds to a calmer, more confidently-priced market? Across all 104 matches, bigger blowouts tend toward calmer markets, while closer matches show far more varied volatility.",
+  //   stats: [
+  //     { label: "Pearson r", value: "−0.38" },
+  //     { label: "n", value: "104" },
+  //   ],
+  //   figures: [
+  //     {
+  //       src: "/figures/dominance_plot.png",
+  //       alt: "Scatter plot of xG margin against Kalshi price range",
+  //       caption: "|xG margin| vs. the price range of the market pricing the actual outcome, across all 104 matches.",
+  //     },
+  //   ],
+  // },
   // {
   //   slug: "final-match",
   //   notebook: "02_analysis_final_match.ipynb",
