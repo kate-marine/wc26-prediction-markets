@@ -49,9 +49,9 @@ export const findings: Finding[] = [
   {
     slug: "regression",
    // notebook: "03_analysis_regression.ipynb",
-    title: "Result vs. performance",
+    title: "Final scoreline vs overall performance",
     summary:
-      "Price movement is split into in-match repricing and the jump at settlement, then regressed on the actual goal margin vs. xG/possession/shots margins across all 104 matches. Goal margin is a strong, significant predictor of total movement and the settlement jump; xG margin isn't, once both are in the same model.",
+      "I split price movement into during-game repricing and the final jump at settlement, then regressed on the actual goal margin vs. xG/possession/shots margins across all 104 matches. Goal margin is a strong, significant predictor of total movement and the settlement jump; xG margin is not, once both are in the same model.",
     stats: [
       { label: "goal β", value: "−0.185 (P < .001)" },
       { label: "xG β", value: "+0.003 (P = .88)" },
