@@ -39,6 +39,30 @@ TEAM_NAME_ALIASES = {
 REVERSE_TEAM_ALIASES = {v: k for k, v in TEAM_NAME_ALIASES.items()}
 FUTURES_ALIASES = {"Korea Republic": "South Korea", "Turkiye": "Turkey", "IR Iran": "Iran"}
 
+# Same fixed checkpoints (minutes before close) as code/05_analysis_calibration.ipynb
+# and code/heterogeneity_analysis.ipynb, applied per match rather than pooled: the
+# mean squared error between the winning market's price and the settled outcome
+# (1.0) at each checkpoint. Lower = the market called the right winner earlier and
+# more confidently; not the same as the paper's pooled reliability-diagram
+# calibration, but the same underlying accuracy measure, one match at a time.
+CALIBRATION_CHECKPOINTS = [180, 150, 120, 90, 60, 30, 15, 5]
+
+
+def match_calibration_error(grp: pd.DataFrame, close_time) -> float | None:
+    if grp is None or pd.isna(close_time):
+        return None
+    sq_errors = []
+    for cp in CALIBRATION_CHECKPOINTS:
+        target = close_time - pd.Timedelta(minutes=cp)
+        before = grp[grp["timestamp"] <= target]
+        if len(before):
+            price = before["price_close"].iloc[-1]
+            if pd.notna(price):
+                sq_errors.append((price - 1.0) ** 2)
+    if not sq_errors:
+        return None
+    return round(sum(sq_errors) / len(sq_errors), 4)
+
 
 def slugify(name: str) -> str:
     name = name.replace("KXWCGAME-", "").lower()
@@ -172,6 +196,13 @@ def main() -> None:
             prices = [p["price"] for p in outcome_market["series"]]
             price_range = round(max(prices) - min(prices), 3)
 
+        outcome_market_row = next((m for m in group.itertuples() if m.result == "yes"), None)
+        calibration_error = None
+        if outcome_market_row is not None:
+            calibration_error = match_calibration_error(
+                candles_by_ticker.get(outcome_market_row.market_ticker), outcome_market_row.close_time
+            )
+
         match_momentum = momentum[momentum["event_id"] == event_id]
         momentum_payload = [
             {"minute": row.minute, "value": int(row.value)} for row in match_momentum.itertuples()
@@ -262,6 +293,7 @@ def main() -> None:
                 "xgMargin": round(float(xg_margin), 2) if pd.notna(xg_margin) else None,
                 "priceRange": price_range,
                 "volume": round(float(match_volume_by_event.get(event_id, 0)), 0),
+                "calibrationError": calibration_error,
             }
         )
 

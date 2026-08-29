@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { MatchExplorer } from "./MatchExplorer";
 import { TeamExplorer } from "./TeamExplorer";
+import { AccuracyExplorer } from "./AccuracyExplorer";
 
-type Tab = "match" | "team";
+type Tab = "match" | "team" | "accuracy";
 
 function getInitialTab(): Tab {
   if (typeof window === "undefined") return "match";
@@ -21,8 +22,13 @@ export default function Dashboard() {
         <button type="button" role="tab" aria-selected={tab === "team"} onClick={() => setTab("team")}>
           By team
         </button>
+        <button type="button" role="tab" aria-selected={tab === "accuracy"} onClick={() => setTab("accuracy")}>
+          Pricing accuracy
+        </button>
       </div>
-      {tab === "match" ? <MatchExplorer /> : <TeamExplorer />}
+      {tab === "match" && <MatchExplorer />}
+      {tab === "team" && <TeamExplorer />}
+      {tab === "accuracy" && <AccuracyExplorer onSelectMatch={() => setTab("match")} />}
     </div>
   );
 }

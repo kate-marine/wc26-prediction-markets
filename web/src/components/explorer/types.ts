@@ -12,6 +12,7 @@ export interface ManifestEntry {
   xgMargin: number | null;
   priceRange: number | null;
   volume: number;
+  calibrationError: number | null;
 }
 
 export interface PricePoint {
