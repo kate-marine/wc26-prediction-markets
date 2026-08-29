@@ -113,17 +113,45 @@ code {
   padding: 0.05em 0.35em;
 }
 
-.page-outline {
-  font-family: var(--sans);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin: 1.4rem 0 0.5rem;
+/* --- dot nav: fixed to the right edge, tracks scroll position --- */
+
+.dotnav {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 40;
 }
 
-.page-outline a {
-  color: var(--ink-soft);
+.dotnav a {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-faint);
+  background: transparent;
+  display: block;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.dotnav a:hover {
+  border-color: var(--signal);
+}
+
+.dotnav a.active {
+  background: var(--signal);
+  border-color: var(--signal);
+  transform: scale(1.35);
+}
+
+@media (max-width: 900px) {
+  .dotnav {
+    display: none;
+  }
 }
 
 ul,
@@ -262,11 +290,8 @@ td {
 }
 
 th {
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+  font-family: inherit;
+  color: var(--ink);
   border-bottom: 1px solid var(--ink);
 }
 
@@ -519,6 +544,11 @@ table.match-table {
 
 .match-table thead th:first-child {
   text-align: left;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
 
 .sort-button {
