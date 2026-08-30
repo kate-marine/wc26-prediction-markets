@@ -88,7 +88,7 @@ export const findings: Finding[] = [
    // notebook: "05_analysis_calibration.ipynb",
     title: "Is the market calibrated?",
     summary:
-      "A different angle on the same question of whether a Kalshi price of X% is actually right X% of the time. I find that Brier scores improve as settlement approaches and is better than the base-rate benchmark consistently. The reliability diagram also shows no obvious systematic bias.",
+      "A different angle on the same question of whether a Kalshi price of X% is actually right X% of the time. I find that Brier scores improve as settlement approaches and they are better than the base-rate benchmark consistently. The reliability diagrams also show no obvious systematic bias.",
     stats: [
       { label: "Brier @ 3h", value: "0.166" },
       { label: "Brier @ 5min", value: "0.026" },
@@ -97,7 +97,7 @@ export const findings: Finding[] = [
       {
         src: "/figures/calibration.png",
         alt: "Brier score over time and a reliability diagram at four checkpoints",
-        caption: "Forecast accuracy vs. time to settlement, and a reliability diagram at four horizons.",
+        caption: "Forecast accuracy vs. time to settlement, and a reliability diagram at four time stamps.",
       },
     ],
   },
@@ -106,7 +106,7 @@ export const findings: Finding[] = [
    // notebook: "06_analysis_attention.ipynb",
     title: "Does public attention explain market behavior?",
     summary:
-      "Using Kalshi's own volume and open interest as a revealed-preference attention proxy. Trading volume is concentrated in the group stage, not the final. In fact, the final ranks only #59 of 104 matches by volume. Around goals, bigger volume spikes predict bigger immediate price jumps, but not whether that jump later reverts.",
+      "Using Kalshi's own volume and open interest as a proxy for public attention. Trading volume is concentrated in the group stage, not the final. In fact, the final ranks only #59 of 104 matches by volume. Around goals, bigger volume spikes predict bigger immediate price jumps, but not whether that jump later reverts.",
     stats: [
       { label: "final's rank by volume", value: "#59 / 104" },
       { label: "spike r on jump size", value: "+0.29 (P = .04)" },
@@ -115,7 +115,7 @@ export const findings: Finding[] = [
       {
         src: "/figures/attention_by_stage.png",
         alt: "Bar chart of trading volume by tournament stage",
-        caption: "Trading volume by tournament stage — group stage draws the most, the final ranks #59 of 104.",
+        caption: "Trading volume by tournament stage. Group stage draws the most, the final ranks #59 of 104.",
       },
       {
         src: "/figures/attention_vs_reaction.png",
@@ -129,7 +129,7 @@ export const findings: Finding[] = [
   //  notebook: "07_analysis_underreaction.ipynb",
     title: "Testing the underreaction",
     summary:
-      "Instead of overreacting to goals, does the market underreact to performance quality the scoreline didn't capture? Uses performance_gap (xG margin minus goal margin) to predict subsequent title-odds drift, across all 208 team-match observations. I find no evidence of underreaction either. Where there's any hint at all, it points the opposite direction from the prediction.",
+      "Instead of overreacting to goals, does the market underreact to performance quality the scoreline didn't capture? I used performance_gap (xG margin minus goal margin) to predict subsequent title-odds drift, across all 208 team-match observations. I found no evidence of underreaction either. Where there's any hint at all, it points the opposite direction from the prediction.",
     stats: [
       { label: "r, all goals", value: "−0.07 (P = .36)" },
       { label: "r, reactive subset", value: "−0.25 (P = .09)" },
@@ -148,7 +148,7 @@ export const findings: Finding[] = [
    // notebook: "heterogeneity_analysis.ipynb",
     title: "Efficiency across matches",
     summary:
-      "Matches attracting the greatest trading volume (and with the most money flowing through them) are priced measurably less accurately, and this effect is independent of tournament stage, survives disaggregation from open interest",
+      "Matches attracting the greatest trading volume (and with the most money flowing through them) are priced measurably less accurately. Because group-stage matches are known to draw disproportionately higher volume than knockout matches, I tested whether the effect was confounded with tournament stage. I found that it is not, and adding a stage control actually slightly strengthens the volume coefficient (0.047 without a stage control, 0.075 with the full seven-stage tournament structure included).",
     stats: [
       { label: "low-volume Brier", value: "0.103" },
       { label: "high-volume Brier", value: "0.151" },
