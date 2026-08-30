@@ -206,6 +206,14 @@ li {
   font-weight: 700;
 }
 
+.hero-band {
+  display: block;
+  width: 100%;
+  height: clamp(180px, 28vw, 420px);
+  object-fit: cover;
+  border-bottom: 1px solid var(--line-strong);
+}
+
 .site-footer {
   display: flex;
   justify-content: space-between;

@@ -55,11 +55,9 @@ export function AccuracyExplorer({ onSelectMatch }: Props) {
   return (
     <div>
       <p className="prose">
-        Every point is one match, plotted by how much money traded on it against how accurately its winning-side
-        market was priced &mdash; the mean squared error between that market&rsquo;s price and the eventual outcome
-        at the same eight checkpoints used in the paper&rsquo;s calibration test, applied match by match instead of
-        pooled. Hover a point or a row for detail; click either to open that match. The pattern here is the site&rsquo;s
-        headline finding made explorable: the most heavily-traded matches skew toward the top of the chart.
+        Every point is one match, plotted by how much money traded on it against how accurately its
+        market was priced. Hover a point or a row for detail; click either to open that match. The pattern here is 
+        that the most heavily-traded matches skew toward the top of the chart.
       </p>
       <AccuracyChart manifest={rows} onSelect={handleSelect} />
       <div className="match-table-wrap">

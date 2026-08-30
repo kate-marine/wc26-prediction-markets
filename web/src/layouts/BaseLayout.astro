@@ -7,12 +7,14 @@ interface Props {
   title: string;
   description?: string;
   wide?: boolean;
+  hero?: string;
 }
 
 const {
   title,
   description = "An analysis of Kalshi's 2026 World Cup prediction markets.",
   wide = false,
+  hero,
 } = Astro.props;
 ---
 
@@ -27,6 +29,7 @@ const {
   </head>
   <body>
     <Nav />
+    {hero && <img class="hero-band" src={hero} alt="" />}
     <main class={wide ? "main-wide" : undefined}>
       <slot />
     </main>
