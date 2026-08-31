@@ -21,39 +21,66 @@ python3 -m venv .venv
 
 ## Notebooks
 
+Every notebook lives in [`code/`](code/) and writes its output under `data/` (pulls) or `output/figures/` (analyses); none of them take arguments or need editing to run — just execute top to bottom.
+
 ### Data pull
 
-- **`data_pull_kalshi.ipynb`** — World Cup 2026 market data from Kalshi's
-  public API: per-match win/lose/tie prices around each of the 104 matches (`KXWCGAME`), and
-  tournament-winner futures odds (`KXMENWORLDCUP`).
-- **`data_pull_fbref.ipynb`** —  match data via the `soccerdata` library (drives Chrome via Selenium to get
-  past FBref's Cloudflare check). Shooting/keeper/misc team stats per
-  match, goal/card/sub event timeline, lineups, and full player-level
-  match box scores. 
-- **`data_pull_sofascore.ipynb`** — uses SofaScore's public JSON API. Gives per-minute "momentum" index (fbref doesn't have),
-  team stats split by half,
-  minute-stamped incidents, and  per-shot log with xG/xGOT and pitch
-  coordinates.
+- **[`00_pull_kalshi.ipynb`](code/00_pull_kalshi.ipynb)**
+  - **Input:** Kalshi's public market-data API via `kalshi_client.py` 
+  - **Does:** fetches `KXWCGAME` (the 104 per-match 3-way win/lose/tie markets, with minute candles anchored to each market's own close time) and `KXMENWORLDCUP` (one tournament-winner futures market per team, hourly candles for the full series).
+  - **Output:** `data/kalshi/kxwcgame_markets.parquet`/`.csv`, `data/kalshi/kxmenworldcup_markets.parquet`/`.csv`, `data/kalshi/candlesticks/kxwcgame_minute.parquet`, `data/kalshi/candlesticks/kxmenworldcup_hourly.parquet`.
 
-Note: used Claude Code to help generate these notebooks as trying to scrape the data myself was very hard.
+- **[`00_pull_fbref.ipynb`](code/00_pull_fbref.ipynb)**
+  - **Input:** FBref match-report pages, scraped via the `soccerdata` library (drives a real Chrome browser through Selenium to get past FBref's Cloudflare check; no API key, self-throttled to ~7s/request).
+  - **Does:** pulls team-season shooting/keeper/misc match logs and restricts them to this tournament's 104 matches; pulls per-match goal/card/sub event timelines, lineups, and full player-level box scores.
+  - **Output:** `data/fbref/schedule.parquet`, `team_match_shooting.parquet`, `team_match_keeper.parquet`, `team_match_misc.parquet`, `events.parquet`, `lineup.parquet`, `player_match_summary.parquet`, `player_match_keepers.parquet`.
+
+- **[`00_pull_sofascore.ipynb`](code/00_pull_sofascore.ipynb)**
+  - **Input:** SofaScore's undocumented public JSON API via `sofascore_client.py`.
+  - **Does:** pulls the schedule, long-format per-match, period, team statistics, a minute-stamped incident feed (goals/cards/subs/VAR), a per-minute momentum index, and a per-shot log with xG/xGOT and pitch coordinates.
+  - **Output:** `data/sofascore/schedule.parquet`, `statistics.parquet`, `incidents.parquet`, `momentum.parquet`, `shotmap.parquet`.
+
+Note: used Claude Code to help generate these notebooks, since trying to scrape the data myself was very hard.
 
 ### Analysis
 
-- **`dominance_analysis.ipynb`** — tournament-wide scatter plot of |xG
-  margin| against Kalshi price volatility.
+- **[`01_analysis_dominance.ipynb`](code/01_analysis_dominance.ipynb)**
+  - **Input:** `data/kalshi/kxwcgame_markets.parquet` + `candlesticks/kxwcgame_minute.parquet`; `data/sofascore/schedule.parquet` + `statistics.parquet`.
+  - **Does:** joins each match's outcome-market price range to SofaScore's |xG margin| (team-name crosswalk, exact-match join) and correlates performance dominance against price volatility.
+  - **Output:** `output/figures/dominance_plot.png`; prints Pearson r and n.
 
-- **`final_match_analysis.ipynb`** — plots Kalshi win/lose/tie probabilities against SofaScore's per-minute momentum for the final.
+- **[`02_analysis_final_match.ipynb`](code/02_analysis_final_match.ipynb)**
+  - **Input:** Kalshi `kxwcgame_markets.parquet` + minute candles; SofaScore `schedule.parquet`, `momentum.parquet`, `incidents.parquet` for the single match with the latest close time (the final).
+  - **Does:** overlays Kalshi's live win/lose/tie prices against SofaScore's per-minute momentum and goal timestamps, anchored to kickoff.
+  - **Output:** `output/figures/final_plot.png`.
 
-- **`regression_analysis.ipynb`** — regresses price movement (split into in-match repricing vs. the jump at settlement) on the actual goal margin vs. xG/possession/shots margins, across all 104 matches, to see whether the market moves more with results or with underlying performance.
+- **[`03_analysis_regression.ipynb`](code/03_analysis_regression.ipynb)**
+  - **Input:** Kalshi markets + minute candles; SofaScore schedule + statistics.
+  - **Does:** decomposes each outcome market's price series into in-match movement, the settlement jump, and total price range, then regresses each (OLS) on standardized goal margin vs. xG/possession/shots margins to see whether price tracks results or performance.
+  - **Output:** `output/figures/regression_coefficients.png`; three OLS regression summaries printed inline.
 
-- **`overreaction_analysis.ipynb`** — event study on goals looking at whether the market overreacts and partially correct, or if it keeps drifting the same way. First-half goals only (see the notebook for why). Preliminary result: no overreaction (if anything a mild, statistically significant tendency to keep drifting the same direction though the effect is small in magnitude).
+- **[`04_analysis_overreaction.ipynb`](code/04_analysis_overreaction.ipynb)**
+  - **Input:** Kalshi markets + minute candles; SofaScore schedule + incidents.
+  - **Does:** an event study on first-half goals. Splits each goal's price reaction into an immediate jump and subsequent drift, tests reversion against a 50/50 null with a binomial sign test. Result: no overreaction; if anything, a mild statistically significant tendency to keep drifting the same direction.
+  - **Output:** `output/figures/overreaction_scatter.png`; reversion-rate stats printed inline.
 
-- **`calibration_analysis.ipynb`** — looking if a Kalshi price of X% actually right X% of the time (Brier score + reliability diagram), tracked at fixed times before each market's settlement. Covers all 312 markets across the full pre-match to close window, not just first-half goals. Result so far: Brier score improves  as settlement approaches and beats the base-rate benchmark throughout; the reliability diagram tracks the diagonal reasonably well with no obvious systematic bias.
+- **[`05_analysis_calibration.ipynb`](code/05_analysis_calibration.ipynb)**
+  - **Input:** Kalshi markets + minute candles (all 312 finalized `KXWCGAME` markets).
+  - **Does:** samples each market's price at 8 fixed checkpoints before its own close time and computes Brier score and reliability diagrams against the eventual outcome. Result so far: Brier score improves as settlement approaches and beats the base-rate benchmark throughout; the reliability diagram tracks the diagonal reasonably well with no obvious systematic bias.
+  - **Output:** `output/figures/calibration.png`.
 
-- **`attention_analysis.ipynb`** — uses Kalshi's own `volume`/`open_interest` as a proxy for attention. Two findings: (1) trading volume is concentrated in the group stage, not the final; (2) around goals, bigger volume spikes predict bigger immediate price jumps (r = +0.29, p = 0.04) but not whether that jump later reverts (p = 0.65).
+- **[`06_analysis_attention.ipynb`](code/06_analysis_attention.ipynb)**
+  - **Input:** Kalshi markets + minute candles; SofaScore schedule + incidents.
+  - **Does:** Part 1: trading volume by tournament stage (finds volume concentrated in the group stage, not the final). Part 2 : correlates goal-triggered volume spikes with immediate reaction size (r = +0.29, p = 0.04) and whether that reaction later reverts (p = 0.65, not significant).
+  - **Output:** `output/figures/attention_by_stage.png`, `output/figures/attention_vs_reaction.png`.
 
+- **[`07_analysis_underreaction.ipynb`](code/07_analysis_underreaction.ipynb)**
+  - **Input:** Kalshi `KXWCGAME` markets; Kalshi `KXMENWORLDCUP` futures markets + hourly candles; SofaScore schedule + statistics.
+  - **Does:** tests the mirror-image behavioral hypothesis of whether the market *underreacts* to performance quality the scoreline didn't capture. Uses `performance_gap` (xG margin minus goal margin) to predict subsequent title-odds drift, across all 208 team-match observations. Result: no evidence of underreaction either (r = −0.07, p = 0.36 on the full sample; r = −0.25, p = 0.09 restricted to matches with a real immediate reaction).
+  - **Output:** `output/figures/underreaction_test.png`.
 
-- **`underreaction_analysis.ipynb`** — tests the mirror-image behavioral hypothesis of whether the market *underreacts* to performance quality the scoreline didn't capture. Uses `performance_gap` (xG margin minus goal margin — did a team deserve better or worse than their result) to predict subsequent title-odds drift, across all 208 team-match observations. Result: no evidence of underreaction either as the correlation is small and non-significant (r = -0.07, p = 0.36 on the full sample; r = -0.25, p = 0.09 restricted to real reactions). 
-
-- **`heterogeneity_analysis.ipynb`** — splits `calibration_analysis.ipynb`'s Brier-score methodology across 3 conditions instead of one pooled average. No effect from tournament progression (p = 0.76). But match-level attention (total volume) predicts significantly worse calibration as high-volume matches are worse-priced than low-volume ones at every single checkpoint, not just on average (p = 2.6×10⁻⁷). Checkpoint-level open interest independently predicts better calibration** (p < 0.001 for both, controlling for each other and for time-to-close). Therefore, a lot of trading *flow* in a popular match is associated with worse pricing, while a lot of accumulated *positions* is associated with better pricing.
+- **[`heterogeneity_analysis.ipynb`](code/heterogeneity_analysis.ipynb)**
+  - **Input:** Kalshi markets + minute candles; SofaScore schedule.
+  - **Does:** splits `05_analysis_calibration.ipynb`'s Brier-score methodology across three conditions instead of one pooled average (tournament progression, match-level trading volume, and checkpoint-level open interest) then a joint regression with checkpoint fixed effects, plus a tournament-stage robustness check. No effect from tournament progression (p = 0.76). Match-level attention (volume) predicts significantly worse calibration (p = 2.6×10⁻⁷); checkpoint-level open interest independently predicts *better* calibration (p < 0.001 for both, controlling for each other and time-to-close). A lot of trading *flow* in a popular match is associated with worse pricing, while a lot of accumulated *positions* is associated with better pricing.
+  - **Output:** `output/figures/heterogeneity_analysis.png`.
 
