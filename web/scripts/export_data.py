@@ -40,7 +40,7 @@ REVERSE_TEAM_ALIASES = {v: k for k, v in TEAM_NAME_ALIASES.items()}
 FUTURES_ALIASES = {"Korea Republic": "South Korea", "Turkiye": "Turkey", "IR Iran": "Iran"}
 
 # Same fixed checkpoints (minutes before close) as code/05_analysis_calibration.ipynb
-# and code/heterogeneity_analysis.ipynb, applied per match rather than pooled: the
+# and code/08_heterogeneity_analysis.ipynb, applied per match rather than pooled: the
 # mean squared error between the winning market's price and the settled outcome
 # (1.0) at each checkpoint. Lower = the market called the right winner earlier and
 # more confidently; not the same as the paper's pooled reliability-diagram

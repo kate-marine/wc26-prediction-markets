@@ -145,7 +145,7 @@ export const findings: Finding[] = [
   },
   {
     slug: "heterogeneity",
-   // notebook: "heterogeneity_analysis.ipynb",
+   // notebook: "08_heterogeneity_analysis.ipynb",
     title: "Efficiency across matches",
     summary:
       "Matches attracting the greatest trading volume (and with the most money flowing through them) are priced measurably less accurately. Because group-stage matches are known to draw disproportionately higher volume than knockout matches, I tested whether the effect was confounded with tournament stage. I found that it is not, and adding a stage control actually slightly strengthens the volume coefficient (0.047 without a stage control, 0.075 with the full seven-stage tournament structure included).",

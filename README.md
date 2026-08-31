@@ -79,7 +79,7 @@ Note: used Claude Code to help generate these notebooks, since trying to scrape 
   - **Does:** tests the mirror-image behavioral hypothesis of whether the market *underreacts* to performance quality the scoreline didn't capture. Uses `performance_gap` (xG margin minus goal margin) to predict subsequent title-odds drift, across all 208 team-match observations. Result: no evidence of underreaction either (r = −0.07, p = 0.36 on the full sample; r = −0.25, p = 0.09 restricted to matches with a real immediate reaction).
   - **Output:** `output/figures/underreaction_test.png`.
 
-- **[`heterogeneity_analysis.ipynb`](code/heterogeneity_analysis.ipynb)**
+- **[`08_heterogeneity_analysis.ipynb`](code/08_heterogeneity_analysis.ipynb)**
   - **Input:** Kalshi markets + minute candles; SofaScore schedule.
   - **Does:** splits `05_analysis_calibration.ipynb`'s Brier-score methodology across three conditions instead of one pooled average (tournament progression, match-level trading volume, and checkpoint-level open interest) then a joint regression with checkpoint fixed effects, plus a tournament-stage robustness check. No effect from tournament progression (p = 0.76). Match-level attention (volume) predicts significantly worse calibration (p = 2.6×10⁻⁷); checkpoint-level open interest independently predicts *better* calibration (p < 0.001 for both, controlling for each other and time-to-close). A lot of trading *flow* in a popular match is associated with worse pricing, while a lot of accumulated *positions* is associated with better pricing.
   - **Output:** `output/figures/heterogeneity_analysis.png`.
